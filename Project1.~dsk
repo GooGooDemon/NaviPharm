@@ -16,12 +16,14 @@ File_13=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\SOURCE
 
 [Modules]
 Module0=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\MainUnit.pas
-Module1=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.pas
-Module2=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas
-Module3=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\UtilitesUnit.pas
-Module4=c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\win\Winapi.Windows.pas
-Module5=D:\Work Files\Projects\Delphi\CopyFileEx\uMain.pas
-Count=6
+Module1=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas
+Module2=D:\AcademTrade\Docs\Delphi Projects\AutoTester\DataModuleUnit.pas
+Module3=D:\AcademTrade\Docs\Delphi Projects\AutoTester\UnitODBC.pas
+Module4=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.pas
+Module5=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\UtilitesUnit.pas
+Module6=c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\win\Winapi.Windows.pas
+Module7=D:\Work Files\Projects\Delphi\CopyFileEx\uMain.pas
+Count=8
 EditWindowCount=1
 
 [D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\MainUnit.pas]
@@ -29,14 +31,24 @@ ModuleType=TSourceModule
 FormState=1
 FormOnTop=1
 
-[D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.pas]
+[D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[D:\AcademTrade\Docs\Delphi Projects\AutoTester\DataModuleUnit.pas]
 ModuleType=TSourceModule
 FormState=1
 FormOnTop=0
 
-[D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas]
+[D:\AcademTrade\Docs\Delphi Projects\AutoTester\UnitODBC.pas]
 ModuleType=TSourceModule
 FormState=0
+FormOnTop=0
+
+[D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.pas]
+ModuleType=TSourceModule
+FormState=1
 FormOnTop=0
 
 [D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\UtilitesUnit.pas]
@@ -55,7 +67,7 @@ FormState=1
 FormOnTop=0
 
 [EditWindow0]
-ViewCount=6
+ViewCount=8
 CurrentEditView=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\MainUnit.pas
 View0=0
 View1=1
@@ -63,6 +75,8 @@ View2=2
 View3=3
 View4=4
 View5=5
+View6=6
+View7=7
 PercentageSizes=1
 Create=1
 Visible=1
@@ -81,13 +95,13 @@ BorlandEditorCodeExplorer=BorlandEditorCodeExplorer@EditWindow0
 TopPanelSize=0
 LeftPanelSize=1469
 LeftPanelClients=PropertyInspector
-LeftPanelData=000008000101000000009D1300000000000001BD050000000000000100000000DE2200001100000050726F7065727479496E73706563746F72FFFFFFFF
+LeftPanelData=000008000101000000003C1000000000000001BD050000000000000100000000DD1C00001100000050726F7065727479496E73706563746F72FFFFFFFF
 RightPanelSize=1047
 RightPanelClients=DockSite4
-RightPanelData=000008000101000000009D130000000000000117040000000000000100000000DE22000009000000446F636B5369746534FFFFFFFF
-BottomPanelSize=0
+RightPanelData=000008000101000000003C100000000000000117040000000000000100000000DD1C000009000000446F636B5369746534FFFFFFFF
+BottomPanelSize=1509
 BottomPanelClients=DockSite1,MessageView
-BottomPanelData=0000080001020200000009000000446F636B53697465310F0000004D65737361676556696577466F726D1534000000000000022606000000000000FFFFFFFF
+BottomPanelData=0000080001020100000009000000446F636B5369746531724500000000000002E5050000000000000100000000724500000F0000004D65737361676556696577466F726DFFFFFFFF
 BottomMiddlePanelSize=0
 BottomMiddlePanelClients=DockSite0,GraphDrawingModel
 BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E67566965779F1D00000000000002F206000000000000FFFFFFFF
@@ -98,8 +112,8 @@ TabDockRightClients=DockSite2=0
 CustomEditViewType=TEditView
 Module=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\MainUnit.pas
 CursorX=8
-CursorY=88
-TopLine=74
+CursorY=96
+TopLine=82
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -119,15 +133,37 @@ EditViewName=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование �
 [View2]
 CustomEditViewType=TEditView
 Module=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas
-CursorX=32
-CursorY=125
-TopLine=96
+CursorX=21
+CursorY=152
+TopLine=132
 LeftCol=1
 Elisions=
 Bookmarks={9,140,85}
 EditViewName=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas
 
 [View3]
+CustomEditViewType=TEditView
+Module=D:\AcademTrade\Docs\Delphi Projects\AutoTester\UnitODBC.pas
+CursorX=1
+CursorY=1
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=D:\AcademTrade\Docs\Delphi Projects\AutoTester\UnitODBC.pas
+
+[View4]
+CustomEditViewType=TEditView
+Module=D:\AcademTrade\Docs\Delphi Projects\AutoTester\DataModuleUnit.pas
+CursorX=1
+CursorY=300
+TopLine=174
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=D:\AcademTrade\Docs\Delphi Projects\AutoTester\DataModuleUnit.pas
+
+[View5]
 CustomEditViewType=TEditView
 Module=c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\win\Winapi.Windows.pas
 CursorX=3
@@ -138,7 +174,7 @@ Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\win\Winapi.Windows.pas
 
-[View4]
+[View6]
 CustomEditViewType=TEditView
 Module=D:\Work Files\Projects\Delphi\CopyFileEx\uMain.pas
 CursorX=40
@@ -149,7 +185,7 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Work Files\Projects\Delphi\CopyFileEx\uMain.pas
 
-[View5]
+[View7]
 CustomEditViewType=TEditView
 Module=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\UtilitesUnit.pas
 CursorX=62
@@ -220,12 +256,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=1917
-Height=8433
+Width=2000
+Height=8788
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1917
-ClientHeight=8433
+ClientWidth=2000
+ClientHeight=8788
 TBDockHeight=5904
 LRDockWidth=2349
 Dockable=1
@@ -234,18 +270,18 @@ StayOnTop=0
 [MessageView]
 PercentageSizes=1
 Create=1
-Visible=0
+Visible=1
 Docked=1
 State=0
 Left=0
-Top=0
-Width=2766
-Height=1413
+Top=23
+Width=10000
+Height=1346
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=2766
-ClientHeight=1413
-TBDockHeight=1413
+ClientWidth=10000
+ClientHeight=1346
+TBDockHeight=1346
 LRDockWidth=2766
 Dockable=1
 StayOnTop=0
@@ -259,11 +295,11 @@ State=0
 Left=0
 Top=0
 Width=1047
-Height=9048
+Height=7452
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1047
-ClientHeight=9048
+ClientHeight=7452
 TBDockHeight=7154
 LRDockWidth=2000
 Dockable=1
@@ -399,11 +435,11 @@ State=0
 Left=0
 Top=23
 Width=1469
-Height=9048
+Height=7452
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1469
-ClientHeight=9048
+ClientHeight=7452
 TBDockHeight=9000
 LRDockWidth=1469
 Dockable=1
@@ -412,8 +448,8 @@ SplitPos=116
 
 [PropInspDesignerSelection]
 ArrangeBy=Name
-SelectedItem=Name,
-ExpandedItems=Constraints=0,DataSource=0,Font=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0,StyleElements=0,Touch=0,TraceFlags=0
+SelectedItem=Align,
+ExpandedItems=Constraints=0,DataSource=0,Font=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0,StyleElements=0,Touch=0,TraceFlags=0,TableTypes=0,Database=0,Transaction=0,Anchors=0,Options=0,TitleFont=0,BorderIcons=0,GlassFrame=0,HorzScrollBar=0,Padding=0,Title=0
 
 [TFileExplorerForm]
 PercentageSizes=1
@@ -641,14 +677,14 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=0
-Top=0
+Left=4
+Top=24
 Width=2000
-Height=9000
+Height=9029
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1917
-ClientHeight=8673
+ClientWidth=2000
+ClientHeight=9029
 TBDockHeight=9000
 LRDockWidth=2000
 Dockable=1
@@ -692,11 +728,11 @@ State=0
 Left=0
 Top=23
 Width=1047
-Height=9048
+Height=7452
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1047
-ClientHeight=9048
+ClientHeight=7452
 TBDockHeight=9000
 LRDockWidth=1047
 Dockable=1

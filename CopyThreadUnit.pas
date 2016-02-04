@@ -29,11 +29,6 @@ type
    function CopyFileProgress(TotalFileSize, TotalBytesTransferred, StreamSize, StreamBytesTransferred: LARGE_INTEGER;
                              dwStreamNumber, dwCallbackReason, hSourceFile, hDestinationFile: DWORD; lpData: Pointer): DWORD; stdcall;
 
-const
-   CEXM_CANCEL   = WM_USER + 1;
-   CEXM_CONTINUE = WM_USER + 2; // wParam: lopart, lParam: hipart
-   CEXM_MAXBYTES = WM_USER + 3; // wParam: lopart; lParam: hipart
-
 var
    CancelCopy: Boolean = False;
 
@@ -47,7 +42,7 @@ var
 
 implementation
 
-uses UtilitesUnit, ProgressFormUnit;
+uses UtilitesUnit, ProgressFormUnit, MainUnit;
 
 { TCopyThread }
 
@@ -65,7 +60,6 @@ var
    SrcFilesList: TStringList;
    DstFilesList: TStringList;
    i: Integer;
-   msg: string;
    Cancel : PBool;
 begin
    SrcFilesList := TStringList.Create;
@@ -103,6 +97,21 @@ end;
 procedure TCopyThread.FinishedFile;
 begin
    fmProgress.ProgressFile.Position := 100;
+
+   with fmMain do
+   begin
+      if not IBTransaction1.InTransaction then IBTransaction1.StartTransaction;
+      if not IBTable1.Active then IBTable1.Active := True;
+
+      IBTable1.Append;
+      IBTable1FNAME.Value     := CurrentFileName;
+      IBTable1FSIZE.Value     := CurrentFileSize.QuadPart;
+      IBTable1TIMESTART.Value := CurrentFileStartTime;
+      IBTable1TIMEEND.Value   := Now;
+      IBTable1.Post;
+
+      IBTransaction1.Commit;
+   end;
 end;
 
 procedure TCopyThread.StartedFile;
@@ -127,7 +136,7 @@ end;
 
 procedure TCopyThread.OnTerminate(Sender: TObject);
 begin
-   //FreeAndNil(Self);
+
 end;
 
 procedure TCopyThread.PrepareDstFileList(SrcList, DstList: TStringList);
@@ -150,10 +159,12 @@ begin
    fmProgress.ProgressFile.Position  := 100;
    fmProgress.Timer1.Enabled := false;
    fmProgress.Close;
+   fmMain.ShowLog;
 end;
 
 procedure TCopyThread.ProgressStarted;
 begin
+   CancelCopy := False;
    TotalStartTime := Now;
    fmProgress.LabelFilesCount.Caption := Format('Файл %d из %d', [CurrentFileNumber, TotalFiles]);
    fmProgress.ProgressTotal.Position := 0;
@@ -166,7 +177,6 @@ function CopyFileProgress(TotalFileSize, TotalBytesTransferred, StreamSize, Stre
 begin
    if CancelCopy = True then
    begin
-      SendMessage(THandle(lpData), CEXM_CANCEL, 0, 0);
       result := PROGRESS_CANCEL;
       Exit;
    end;
@@ -174,17 +184,15 @@ begin
    case dwCallbackReason of
       CALLBACK_CHUNK_FINISHED:
          begin
-            SendMessage(THandle(lpData), CEXM_CONTINUE, TotalBytesTransferred.LowPart, TotalBytesTransferred.HighPart);
             result := PROGRESS_CONTINUE;
 
             if TotalFileSize.QuadPart > 0 then
                fmProgress.ProgressFile.Position := Round(TotalBytesTransferred.QuadPart / TotalFileSize.QuadPart * 100)
             else
-               fmProgress.ProgressFile.Position := 10; // Для файлов нулевого размера, только обозначим начало копирования
+               fmProgress.ProgressFile.Position := 50; // Для файлов нулевого размера, только обозначим начало копирования
          end;
       CALLBACK_STREAM_SWITCH:
          begin
-            SendMessage(THandle(lpData), CEXM_MAXBYTES, TotalFileSize.LowPart, TotalFileSize.HighPart);
             result := PROGRESS_CONTINUE;
          end;
    else

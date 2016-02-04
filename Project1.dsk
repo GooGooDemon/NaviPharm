@@ -4,26 +4,26 @@ File_1=TSourceModule,'D:\AcademTrade\Docs\PROJECTS\Forex\Basket vs Basket\Tester
 File_2=TSourceModule,'D:\AcademTrade\Docs\PROJECTS\Forex\Basket vs Basket\Utilites.pas',0,1,1,38,21,0,0,,
 File_3=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\SOURCE\RTL\SYS\System.pas',0,1,1,1,11,0,0,,
 File_4=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\SOURCE\RTL\SYS\System.SysUtils.pas',0,1,8903,20,8918,0,0,,
-File_5=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\common\System.Classes.pas',0,1,1462,46,1485,0,0,,
-File_6=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\win\Winapi.ShlObj.pas',0,1,1,19,19,0,0,,
-File_7=TSourceModule,'D:\Work Files\Projects\DelphiComonents\XE3\JEDI\jcl\source\common\JclAnsiStrings.pas',0,1,36,12,58,0,0,,
-File_8=TSourceModule,'D:\Work Files\Projects\DelphiComonents\XE3\AlphaControls\acSBUtils.pas',0,1,3769,1,3798,0,0,,
-File_9=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\SOURCE\VCL\Vcl.ComCtrls.pas',0,1,19453,1,19473,0,0,{{16974,0}
-File_10=TSourceModule,'D:\Work Files\Projects\DelphiComonents\XE3\AlphaControls\sListView.pas',0,1,649,1,681,0,0,,
-File_11=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\SOURCE\VCL\Vcl.Forms.pas',0,1,10203,1,10231,0,0,{{1693,4}
-File_12=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\SOURCE\VCL\Vcl.Menus.pas',0,1,4556,1,4576,0,0,,
-File_13=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\SOURCE\VCL\Vcl.Controls.pas',0,1,10021,1,10043,0,0,,
+File_5=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\win\Winapi.ShlObj.pas',0,1,1,19,19,0,0,,
+File_6=TSourceModule,'D:\Work Files\Projects\DelphiComonents\XE3\JEDI\jcl\source\common\JclAnsiStrings.pas',0,1,36,12,58,0,0,,
+File_7=TSourceModule,'D:\Work Files\Projects\DelphiComonents\XE3\AlphaControls\acSBUtils.pas',0,1,3769,1,3798,0,0,,
+File_8=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\SOURCE\VCL\Vcl.ComCtrls.pas',0,1,19453,1,19473,0,0,{{16974,0}
+File_9=TSourceModule,'D:\Work Files\Projects\DelphiComonents\XE3\AlphaControls\sListView.pas',0,1,649,1,681,0,0,,
+File_10=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\SOURCE\VCL\Vcl.Forms.pas',0,1,10203,1,10231,0,0,{{1693,4}
+File_11=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\SOURCE\VCL\Vcl.Menus.pas',0,1,4556,1,4576,0,0,,
+File_12=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\10.0\SOURCE\VCL\Vcl.Controls.pas',0,1,10021,1,10043,0,0,,
 
 [Modules]
 Module0=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\MainUnit.pas
-Module1=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas
-Module2=D:\AcademTrade\Docs\Delphi Projects\AutoTester\DataModuleUnit.pas
-Module3=D:\AcademTrade\Docs\Delphi Projects\AutoTester\UnitODBC.pas
-Module4=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.pas
-Module5=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\UtilitesUnit.pas
-Module6=c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\win\Winapi.Windows.pas
-Module7=D:\Work Files\Projects\Delphi\CopyFileEx\uMain.pas
-Count=8
+Module1=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.pas
+Module2=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas
+Module3=c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\common\System.Classes.pas
+Module4=D:\AcademTrade\Docs\Delphi Projects\AutoTester\DataModuleUnit.pas
+Module5=D:\AcademTrade\Docs\Delphi Projects\AutoTester\UnitODBC.pas
+Module6=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\UtilitesUnit.pas
+Module7=c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\win\Winapi.Windows.pas
+Module8=D:\Work Files\Projects\Delphi\CopyFileEx\uMain.pas
+Count=9
 EditWindowCount=1
 
 [D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\MainUnit.pas]
@@ -31,7 +31,17 @@ ModuleType=TSourceModule
 FormState=1
 FormOnTop=1
 
+[D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.pas]
+ModuleType=TSourceModule
+FormState=1
+FormOnTop=1
+
 [D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\common\System.Classes.pas]
 ModuleType=TSourceModule
 FormState=0
 FormOnTop=0
@@ -44,11 +54,6 @@ FormOnTop=0
 [D:\AcademTrade\Docs\Delphi Projects\AutoTester\UnitODBC.pas]
 ModuleType=TSourceModule
 FormState=0
-FormOnTop=0
-
-[D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.pas]
-ModuleType=TSourceModule
-FormState=1
 FormOnTop=0
 
 [D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\UtilitesUnit.pas]
@@ -67,7 +72,7 @@ FormState=1
 FormOnTop=0
 
 [EditWindow0]
-ViewCount=8
+ViewCount=9
 CurrentEditView=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\MainUnit.pas
 View0=0
 View1=1
@@ -77,6 +82,7 @@ View4=4
 View5=5
 View6=6
 View7=7
+View8=8
 PercentageSizes=1
 Create=1
 Visible=1
@@ -111,9 +117,9 @@ TabDockRightClients=DockSite2=0
 [View0]
 CustomEditViewType=TEditView
 Module=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\MainUnit.pas
-CursorX=8
-CursorY=96
-TopLine=82
+CursorX=34
+CursorY=97
+TopLine=28
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -122,26 +128,37 @@ EditViewName=Borland.FormDesignerView
 [View1]
 CustomEditViewType=TEditView
 Module=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.pas
-CursorX=114
-CursorY=83
-TopLine=59
+CursorX=17
+CursorY=67
+TopLine=50
 LeftCol=1
 Elisions=
 Bookmarks=
-EditViewName=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.pas
+EditViewName=Borland.FormDesignerView
 
 [View2]
 CustomEditViewType=TEditView
-Module=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas
-CursorX=21
-CursorY=152
-TopLine=132
+Module=c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\common\System.Classes.pas
+CursorX=1
+CursorY=15315
+TopLine=15293
 LeftCol=1
 Elisions=
-Bookmarks={9,140,85}
-EditViewName=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas
+Bookmarks=
+EditViewName=c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\common\System.Classes.pas
 
 [View3]
+CustomEditViewType=TEditView
+Module=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas
+CursorX=49
+CursorY=116
+TopLine=102
+LeftCol=1
+Elisions=
+Bookmarks={9,156,85}
+EditViewName=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas
+
+[View4]
 CustomEditViewType=TEditView
 Module=D:\AcademTrade\Docs\Delphi Projects\AutoTester\UnitODBC.pas
 CursorX=1
@@ -152,7 +169,7 @@ Elisions=
 Bookmarks=
 EditViewName=D:\AcademTrade\Docs\Delphi Projects\AutoTester\UnitODBC.pas
 
-[View4]
+[View5]
 CustomEditViewType=TEditView
 Module=D:\AcademTrade\Docs\Delphi Projects\AutoTester\DataModuleUnit.pas
 CursorX=1
@@ -163,7 +180,7 @@ Elisions=
 Bookmarks=
 EditViewName=D:\AcademTrade\Docs\Delphi Projects\AutoTester\DataModuleUnit.pas
 
-[View5]
+[View6]
 CustomEditViewType=TEditView
 Module=c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\win\Winapi.Windows.pas
 CursorX=3
@@ -174,7 +191,7 @@ Elisions=
 Bookmarks=
 EditViewName=c:\program files (x86)\embarcadero\rad studio\10.0\source\rtl\win\Winapi.Windows.pas
 
-[View6]
+[View7]
 CustomEditViewType=TEditView
 Module=D:\Work Files\Projects\Delphi\CopyFileEx\uMain.pas
 CursorX=40
@@ -185,7 +202,7 @@ Elisions=
 Bookmarks=
 EditViewName=D:\Work Files\Projects\Delphi\CopyFileEx\uMain.pas
 
-[View7]
+[View8]
 CustomEditViewType=TEditView
 Module=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\UtilitesUnit.pas
 CursorX=62
@@ -212,18 +229,20 @@ State=0
 Left=0
 Top=0
 Width=3828
-Height=1173
+Height=1106
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3828
-ClientHeight=1173
+ClientHeight=1106
 TBDockHeight=221
 LRDockWidth=13599
 Dockable=1
 StayOnTop=0
 
 [Breakpoints]
-Count=0
+Count=2
+Breakpoint0='D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas',145,'',0,1,'',1,0,0,'',1,'','','',0,''
+Breakpoint1='D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas',109,'',0,1,'',1,0,0,'',1,'','','',0,''
 
 [EmbarcaderoWin32Debugger_AddressBreakpoints]
 Count=0
@@ -256,12 +275,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=2000
-Height=8788
+Width=1917
+Height=8433
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=2000
-ClientHeight=8788
+ClientWidth=1917
+ClientHeight=8433
 TBDockHeight=5904
 LRDockWidth=2349
 Dockable=1
@@ -312,7 +331,7 @@ Visible=0
 Docked=1
 State=0
 Left=-1719
-Top=-101
+Top=270
 Width=276
 Height=356
 MaxLeft=-1
@@ -336,11 +355,11 @@ State=0
 Left=0
 Top=0
 Width=3828
-Height=1173
+Height=1106
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3828
-ClientHeight=1173
+ClientHeight=1106
 TBDockHeight=404
 LRDockWidth=4953
 Dockable=1
@@ -355,11 +374,11 @@ State=0
 Left=0
 Top=0
 Width=3828
-Height=1173
+Height=1106
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3828
-ClientHeight=1173
+ClientHeight=1106
 TBDockHeight=221
 LRDockWidth=7406
 Dockable=1
@@ -378,11 +397,11 @@ State=0
 Left=0
 Top=0
 Width=3828
-Height=1173
+Height=1106
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3828
-ClientHeight=1173
+ClientHeight=1106
 TBDockHeight=1538
 LRDockWidth=3484
 Dockable=1
@@ -397,11 +416,11 @@ State=0
 Left=0
 Top=0
 Width=3828
-Height=1173
+Height=1106
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3828
-ClientHeight=1173
+ClientHeight=1106
 TBDockHeight=2058
 LRDockWidth=3484
 Dockable=1
@@ -448,8 +467,8 @@ SplitPos=116
 
 [PropInspDesignerSelection]
 ArrangeBy=Name
-SelectedItem=Align,
-ExpandedItems=Constraints=0,DataSource=0,Font=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0,StyleElements=0,Touch=0,TraceFlags=0,TableTypes=0,Database=0,Transaction=0,Anchors=0,Options=0,TitleFont=0,BorderIcons=0,GlassFrame=0,HorzScrollBar=0,Padding=0,Title=0
+SelectedItem=Action,
+ExpandedItems=Constraints=0,DataSource=0,Font=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0,StyleElements=0,Touch=0,Anchors=0,ImageMargins=0,Database=0,TableTypes=0,Transaction=0,DefaultDatabase=0,BorderIcons=0,GlassFrame=0,HorzScrollBar=0,ProviderFlags=0
 
 [TFileExplorerForm]
 PercentageSizes=1
@@ -457,8 +476,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=-8
-Top=-26
+Left=110
+Top=62
 Width=2844
 Height=6212
 MaxLeft=-1
@@ -479,11 +498,11 @@ State=0
 Left=0
 Top=0
 Width=2339
-Height=1231
+Height=1000
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2339
-ClientHeight=1231
+ClientHeight=1000
 TBDockHeight=2317
 LRDockWidth=2828
 Dockable=1
@@ -541,8 +560,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=0
-Top=0
+Left=367
+Top=830
 Width=2859
 Height=3212
 MaxLeft=-1
@@ -563,11 +582,11 @@ State=0
 Left=0
 Top=0
 Width=3828
-Height=1173
+Height=1106
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3828
-ClientHeight=1173
+ClientHeight=1106
 TBDockHeight=1548
 LRDockWidth=8745
 Dockable=1
@@ -654,14 +673,14 @@ Visible=0
 Docked=1
 State=0
 Left=0
-Top=0
+Top=23
 Width=3828
-Height=1413
+Height=1346
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3828
-ClientHeight=1413
-TBDockHeight=1413
+ClientHeight=1346
+TBDockHeight=1346
 LRDockWidth=3828
 Dockable=1
 StayOnTop=0
@@ -677,14 +696,14 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=4
-Top=24
+Left=0
+Top=0
 Width=2000
-Height=9029
+Height=9000
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=2000
-ClientHeight=9029
+ClientWidth=1917
+ClientHeight=8673
 TBDockHeight=9000
 LRDockWidth=2000
 Dockable=1

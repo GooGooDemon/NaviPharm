@@ -4,8 +4,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Winapi.ShlObj,
-  Vcl.Grids, Vcl.DBGrids, Data.DB, IBDatabase, IBCustomDataSet, IBTable;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Winapi.ShlObj, Winapi.ShellAPI,
+  Vcl.Grids, Vcl.DBGrids, Data.DB, IBDatabase, IBCustomDataSet, IBTable,
+  Vcl.ImgList;
 
 type
   TfmMain = class(TForm)
@@ -20,24 +21,31 @@ type
     Button3: TButton;
     IBTable1: TIBTable;
     IBDatabase1: TIBDatabase;
-    DBGrid1: TDBGrid;
     IBTransaction1: TIBTransaction;
+    DataSource1: TDataSource;
+    ListView1: TListView;
+    SysImageList: TImageList;
     IBTable1ID: TIntegerField;
     IBTable1FNAME: TIBStringField;
     IBTable1FSIZE: TLargeintField;
     IBTable1TIMESTART: TDateTimeField;
     IBTable1TIMEEND: TDateTimeField;
-    IBTable1TIMEDURATION: TFloatField;
-    DataSource1: TDataSource;
+    IBTable1TIMEDURATION: TTimeField;
+    Button4: TButton;
+    Button5: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
   private
     { Private declarations }
     SrcPath, DstPath: string;
+    procedure InitSystemImageList;
   public
     { Public declarations }
+    procedure ShowLog;
   end;
 
 var
@@ -58,9 +66,6 @@ begin
    begin
       SrcPath := IncludeTrailingPathDelimiter(Path);
       SourceLabel.Caption := SrcPath;
-
-      Label1.Visible := True;
-      SourceLabel.Visible := True;
    end;
 end;
 
@@ -73,9 +78,6 @@ begin
    begin
       DstPath := IncludeTrailingPathDelimiter(Path);
       DestLabel.Caption := Path;
-
-      Label3.Visible := True;
-      DestLabel.Visible := True;
    end;
 end;
 
@@ -91,10 +93,94 @@ begin
    fmProgress.ShowProgress(SrcPath, DstPath);
 end;
 
+procedure TfmMain.Button4Click(Sender: TObject);
+begin
+   ShowLog;
+end;
+
+procedure TfmMain.Button5Click(Sender: TObject);
+begin
+   if not IBTransaction1.InTransaction then IBTransaction1.StartTransaction;
+   if not IBTable1.Active then IBTable1.Open;
+
+   IBTable1.Open;
+   IBTable1.EmptyTable;
+
+   IBTransaction1.Commit;
+
+   ShowLog;
+end;
+
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
-   SrcPath := 'D:\Супер суставы';
-   DstPath := 'D:\temp';
+   IBDatabase1.Connected  := false;
+   IBDatabase1.LoginPrompt := false;
+   try
+      IBDatabase1.DatabaseName := 'localhost:' + IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) + 'DATABASE.FDB';
+      IBDatabase1.Params.Clear;
+      IBDatabase1.Params.Add('user_name=SYSDBA');
+      IBDatabase1.Params.Add('password=masterkey');
+      IBDatabase1.Params.Add('lc_ctype=WIN1251');
+      IBDatabase1.Connected := true;
+
+      StatusBar1.SimpleText := 'БД подключена (' + IBDatabase1.DatabaseName + ')';
+   except on E: Exception do
+      MessageBox(Handle, 'Ошибка подключения к Базе Данных.'#$D#$A'Проверьте доступ к файлу "DATABASE.FDB"!', PChar(Caption), MB_ICONERROR);
+   end;
+
+   InitSystemImageList;
+end;
+
+procedure TfmMain.InitSystemImageList;
+var
+  SHFileInfo: TSHFileInfo;
+  Buff: PChar;
+begin
+  Buff := StrAlloc(MAX_PATH);
+  try
+    GetWindowsDirectory(Buff, MAX_PATH);
+    SysImageList.Handle := SHGetFileInfo(Buff, 0, SHFileInfo, SizeOf(SHFileInfo), SHGFI_SYSICONINDEX or SHGFI_SMALLICON);
+    SysImageList.ShareImages := True;
+    SysImageList.BlendColor := clHighLight;
+  finally
+    StrDispose(Buff);
+  end;
+end;
+
+procedure TfmMain.ShowLog;
+var
+   Item: TListItem;
+   FileName: string;
+begin
+   Screen.Cursor := crHourGlass;
+   try
+      ListView1.Items.BeginUpdate;
+      ListView1.Items.Clear;
+
+      if not IBTransaction1.InTransaction then IBTransaction1.StartTransaction;
+      if not IBTable1.Active then IBTable1.Open;
+
+      IBTable1.First;
+      while not IBTable1.Eof do
+      begin
+         Item := ListView1.Items.Add;
+         FileName := TrimRight(IBTable1FNAME.Value);
+         Item.Caption := FileName;
+         Item.ImageIndex := GetSysIconIndexByName(FileName);
+
+         Item.SubItems.Add(FormatFileSize(IBTable1FSIZE.Value));
+         Item.SubItems.Add(IBTable1TIMESTART.AsString);
+         Item.SubItems.Add(IBTable1TIMEEND.AsString);
+         Item.SubItems.Add(TimeToStr(IBTable1TIMEDURATION.Value));
+
+         IBTable1.Next;
+      end;
+
+      IBTransaction1.Commit;
+      ListView1.Items.EndUpdate;
+   finally
+      Screen.Cursor := crDefault;
+   end;
 end;
 
 end.

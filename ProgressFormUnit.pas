@@ -39,6 +39,8 @@ implementation
 
 {$R *.dfm}
 
+uses MainUnit;
+
 { TfmProgress }
 
 procedure TfmProgress.btnPauseClick(Sender: TObject);
@@ -58,11 +60,14 @@ end;
 
 procedure TfmProgress.Button2Click(Sender: TObject);
 begin
-   if MessageDlg('Остановить процесс копирования?', mtConfirmation, [mbYes,mbNo], 0, mbNo) = mrYes then
+   if Assigned(CopyThread) and (not CopyThread.Finished) then
    begin
-      CancelCopy := True;
-      CopyThread.Terminate;
-      Close;
+      if MessageDlg('Остановить процесс копирования?', mtConfirmation, [mbYes,mbNo], 0, mbNo) = mrYes then
+      begin
+         CancelCopy := True;
+         CopyThread.Terminate;
+         Close;
+      end;
    end;
 end;
 

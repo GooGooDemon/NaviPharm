@@ -12,6 +12,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  Application.Title := 'Тестовое задание для НавиФарм';
   Application.CreateForm(TfmMain, fmMain);
   Application.CreateForm(TfmProgress, fmProgress);
   Application.Run;

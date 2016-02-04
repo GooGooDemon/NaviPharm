@@ -3,7 +3,7 @@ object fmMain: TfmMain
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = #1058#1077#1089#1090#1086#1074#1086#1077' '#1079#1072#1076#1072#1085#1080#1077' '#1076#1083#1103' '#1053#1072#1074#1080#1060#1072#1088#1084
+  Caption = #1058#1077#1089#1090#1086#1074#1086#1077' '#1079#1072#1076#1072#1085#1080#1077' '#1076#1083#1103' '#1053#1072#1074#1080#1060#1072#1088#1084' (NemchinovSergey@mail.ru)'
   ClientHeight = 591
   ClientWidth = 801
   Color = clBtnFace
@@ -23,7 +23,7 @@ object fmMain: TfmMain
     Width = 801
     Height = 19
     Panels = <>
-    ExplicitWidth = 777
+    SimplePanel = True
   end
   object GroupBox1: TGroupBox
     Left = 16
@@ -38,15 +38,13 @@ object fmMain: TfmMain
       Width = 85
       Height = 13
       Caption = #1048#1089#1093#1086#1076#1085#1072#1103' '#1087#1072#1087#1082#1072':'
-      Visible = False
     end
     object SourceLabel: TLabel
       Left = 107
       Top = 87
-      Width = 69
+      Width = 77
       Height = 13
-      Caption = '<SRC Folder>'
-      Visible = False
+      Caption = '< '#1085#1077' '#1091#1082#1072#1079#1072#1085#1086' >'
     end
     object Label3: TLabel
       Left = 16
@@ -54,15 +52,13 @@ object fmMain: TfmMain
       Width = 86
       Height = 13
       Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1087#1072#1087#1082#1072':'
-      Visible = False
     end
     object DestLabel: TLabel
       Left = 107
       Top = 114
-      Width = 68
+      Width = 77
       Height = 13
-      Caption = '<DST Folder>'
-      Visible = False
+      Caption = '< '#1085#1077' '#1091#1082#1072#1079#1072#1085#1086' >'
     end
     object Button1: TButton
       Left = 16
@@ -87,57 +83,63 @@ object fmMain: TfmMain
       Top = 23
       Width = 201
       Height = 49
-      Caption = #1053#1072#1095#1072#1090#1100'!'
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100'!'
       TabOrder = 2
       OnClick = Button3Click
     end
+    object Button4: TButton
+      Left = 655
+      Top = 96
+      Width = 100
+      Height = 38
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1083#1086#1075
+      TabOrder = 3
+      OnClick = Button4Click
+    end
+    object Button5: TButton
+      Left = 559
+      Top = 96
+      Width = 90
+      Height = 38
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1083#1086#1075
+      TabOrder = 4
+      OnClick = Button5Click
+    end
   end
-  object DBGrid1: TDBGrid
+  object ListView1: TListView
     Left = 16
-    Top = 167
+    Top = 159
     Width = 769
-    Height = 386
-    DataSource = DataSource1
-    TabOrder = 2
-    TitleFont.Charset = DEFAULT_CHARSET
-    TitleFont.Color = clWindowText
-    TitleFont.Height = -11
-    TitleFont.Name = 'Tahoma'
-    TitleFont.Style = []
+    Height = 402
     Columns = <
       item
-        Expanded = False
-        FieldName = #8470
-        Width = 40
-        Visible = True
+        Caption = #1060#1072#1081#1083
+        Width = 350
       end
       item
-        Expanded = False
-        FieldName = #1060#1072#1081#1083
-        Width = 400
-        Visible = True
+        Alignment = taRightJustify
+        Caption = #1056#1072#1079#1084#1077#1088
+        Width = 80
       end
       item
-        Expanded = False
-        FieldName = #1056#1072#1079#1084#1077#1088
-        Visible = True
+        Caption = #1053#1072#1095#1072#1083#1086
+        Width = 100
       end
       item
-        Expanded = False
-        FieldName = #1053#1072#1095#1072#1083#1086
-        Visible = True
+        Caption = #1050#1086#1085#1077#1094
+        Width = 100
       end
       item
-        Expanded = False
-        FieldName = #1050#1086#1085#1077#1094
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100
-        Width = 110
-        Visible = True
+        Caption = #1044#1083#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100
+        Width = 100
       end>
+    DoubleBuffered = True
+    ReadOnly = True
+    RowSelect = True
+    ParentDoubleBuffered = False
+    SmallImages = SysImageList
+    TabOrder = 2
+    ViewStyle = vsReport
   end
   object IBTable1: TIBTable
     Database = IBDatabase1
@@ -152,29 +154,26 @@ object fmMain: TfmMain
       end
       item
         Name = 'FNAME'
-        Attributes = [faRequired, faFixed]
+        Attributes = [faFixed]
         DataType = ftWideString
         Size = 1024
       end
       item
         Name = 'FSIZE'
-        Attributes = [faRequired]
         DataType = ftLargeint
       end
       item
         Name = 'TIMESTART'
-        Attributes = [faRequired]
         DataType = ftDateTime
       end
       item
         Name = 'TIMEEND'
-        Attributes = [faRequired]
         DataType = ftDateTime
       end
       item
         Name = 'TIMEDURATION'
         Attributes = [faReadonly]
-        DataType = ftFloat
+        DataType = ftTime
       end>
     StoreDefs = True
     TableName = 'TABLE_FILES'
@@ -183,26 +182,22 @@ object fmMain: TfmMain
     Top = 216
     object IBTable1ID: TIntegerField
       FieldName = 'ID'
-      Required = True
     end
     object IBTable1FNAME: TIBStringField
       FieldName = 'FNAME'
-      Required = True
+      FixedChar = True
       Size = 1024
     end
     object IBTable1FSIZE: TLargeintField
       FieldName = 'FSIZE'
-      Required = True
     end
     object IBTable1TIMESTART: TDateTimeField
       FieldName = 'TIMESTART'
-      Required = True
     end
     object IBTable1TIMEEND: TDateTimeField
       FieldName = 'TIMEEND'
-      Required = True
     end
-    object IBTable1TIMEDURATION: TFloatField
+    object IBTable1TIMEDURATION: TTimeField
       FieldKind = fkInternalCalc
       FieldName = 'TIMEDURATION'
       ReadOnly = True
@@ -211,17 +206,20 @@ object fmMain: TfmMain
   object IBDatabase1: TIBDatabase
     Connected = True
     DatabaseName = 
-      'D:\Work Files\Projects\DelphiRAD\NaviPharm '#1050#1086#1087#1080#1088#1086#1074#1072#1085#1080#1077' '#1092#1072#1081#1083#1086#1074'\DA' +
-      'TABASE.FDB'
+      'D:\Work Files\Projects\DelphiRAD\NaviPharm '#1050#1086#1087#1080#1088#1086#1074#1072#1085#1080#1077' '#1092#1072#1081#1083#1086#1074'\Wi' +
+      'n32\Debug\DATABASE.FDB'
     Params.Strings = (
       'user_name=SYSDBA'
-      'password=masterkey')
+      'password=masterkey'
+      'lc_ctype=WIN1251')
     LoginPrompt = False
+    DefaultTransaction = IBTransaction1
     ServerType = 'IBServer'
     Left = 120
     Top = 216
   end
   object IBTransaction1: TIBTransaction
+    Active = True
     DefaultDatabase = IBDatabase1
     Left = 120
     Top = 280
@@ -230,5 +228,9 @@ object fmMain: TfmMain
     DataSet = IBTable1
     Left = 192
     Top = 280
+  end
+  object SysImageList: TImageList
+    Left = 112
+    Top = 352
   end
 end
