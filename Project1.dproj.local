@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.076,D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit1.pas=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\UtilitesUnit.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.046,D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit1.pas=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\MainUnit.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.927,D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit2.dfm=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.739,D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit1.pas=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\CopyThreadUnit.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.375,=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.828,=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.233,D:\Мои документы\RAD Studio\Projects\Unit1.dfm=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.926,D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit2.pas=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\ProgressFormUnit.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.210,=D:\Мои документы\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.233,D:\Мои документы\RAD Studio\Projects\Unit1.pas=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.046,D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit1.dfm=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\MainUnit.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.900,D:\Мои документы\RAD Studio\Projects\Project1.dproj=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.965,=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit2.pas</Transaction>
+    <Transaction>2016.02.04 15:00:13.290,=D:\Work Files\Projects\DelphiRAD\NaviPharm Копирование файлов\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>

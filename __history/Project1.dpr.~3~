@@ -1,0 +1,17 @@
+program Project1;
+
+uses
+  Vcl.Forms,
+  MainUnit in 'MainUnit.pas' {Form1},
+  ProgressFormUnit in 'ProgressFormUnit.pas' {Form2},
+  UtilitesUnit in 'UtilitesUnit.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TForm2, Form2);
+  Application.Run;
+end.

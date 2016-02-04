@@ -1,0 +1,192 @@
+unit CopyThreadUnit;
+
+interface
+
+uses
+   System.Classes, Winapi.Windows, Winapi.Messages, System.SysUtils, Vcl.Forms;
+
+type
+   TCopyThread = class(TThread)
+   private
+      FSourcePath: string;
+      FDestPath: string;
+      FForm: TForm;
+   protected
+      procedure Execute; override;
+      procedure PrepareDstFileList(SrcList, DstList: TStringList);
+      procedure StartedFile;
+      procedure FinishedFile;
+      procedure ProgressStarted;
+      procedure ProgressFinished;
+   public
+      constructor Create(ProgressForm: TForm; Src, Dst: string);
+      procedure OnTerminate(Sender: TObject);
+      property SourcePath: string read FSourcePath write FSourcePath;
+      property DestPath: string read FDestPath write FDestPath;
+      property Form: TForm read FForm write FForm;
+   end;
+
+   function CopyFileProgress(TotalFileSize, TotalBytesTransferred, StreamSize, StreamBytesTransferred: LARGE_INTEGER;
+                             dwStreamNumber, dwCallbackReason, hSourceFile, hDestinationFile: DWORD; lpData: Pointer): DWORD; stdcall;
+
+const
+   CEXM_CANCEL   = WM_USER + 1;
+   CEXM_CONTINUE = WM_USER + 2; // wParam: lopart, lParam: hipart
+   CEXM_MAXBYTES = WM_USER + 3; // wParam: lopart; lParam: hipart
+
+var
+   CancelCopy: Boolean = False;
+
+   TotalFiles: Integer;
+   CurrentFileNumber: Integer;
+   CurrentFileName: string;
+   StartTime: TDateTime;
+
+implementation
+
+uses UtilitesUnit, ProgressFormUnit;
+
+{ TCopyThread }
+
+constructor TCopyThread.Create(ProgressForm: TForm; Src, Dst: string);
+begin
+   FForm       := ProgressForm;
+   FSourcePath := IncludeTrailingPathDelimiter(Src);
+   FDestPath   := IncludeTrailingPathDelimiter(Dst);
+   FreeOnTerminate := True;
+   inherited Create(True);
+end;
+
+procedure TCopyThread.Execute;
+var
+   SrcFilesList: TStringList;
+   DstFilesList: TStringList;
+   i: Integer;
+   msg: string;
+   Cancel : PBool;
+begin
+   SrcFilesList := TStringList.Create;
+   DstFilesList := TStringList.Create;
+   // Сканируем исходную папку (включая подпапки)
+   EnumFilesInFolder(FSourcePath, SrcFilesList, true);
+   // Формируем список имён в месте копирования
+   PrepareDstFileList(SrcFilesList, DstFilesList);
+
+   CurrentFileNumber := 0;
+   TotalFiles := SrcFilesList.Count;
+   Synchronize(ProgressStarted);
+
+   for i := 0 to SrcFilesList.Count - 1 do
+   begin
+      if CancelCopy or Terminated then Break;
+
+      CurrentFileNumber := i;
+      CurrentFileName := SrcFilesList[i];
+
+      Synchronize(StartedFile);
+
+      ForceDirectories(ExtractFilePath(DstFilesList[i]));
+
+      Cancel := PBOOL(False);
+      CopyFileEx(PChar(SrcFilesList[i]), PChar(DstFilesList[i]), @CopyFileProgress, Pointer(Handle), Cancel,
+                  COPY_FILE_ALLOW_DECRYPTED_DESTINATION + COPY_FILE_RESTARTABLE (*+ COPY_FILE_FAIL_IF_EXISTS*));
+
+      Synchronize(FinishedFile);
+   end;
+
+   Synchronize(ProgressFinished);
+end;
+
+procedure TCopyThread.FinishedFile;
+begin
+   fmProgress.ProgressFile.Position := 100;
+end;
+
+procedure TCopyThread.StartedFile;
+var
+   FileInformation: TWin32FileAttributeData;
+   FileSize: LARGE_INTEGER;
+begin
+   ZeroMemory(@FileInformation, SizeOf(FileInformation));
+   GetFileAttributesEx(PChar(CurrentFileName), GetFileExInfoStandard, @FileInformation);
+
+   fmProgress.LabelFileName.Caption := CurrentFileName;
+
+   FileSize.HighPart := FileInformation.nFileSizeHigh;
+   FileSize.LowPart  := FileInformation.nFileSizeLow;
+   fmProgress.LabelFileSize.Caption := FormatFileSize(FileSize.QuadPart);
+
+   fmProgress.ProgressFile.Position := 0;
+   fmProgress.LabelFilesCount.Caption := Format('Файл %d из %d', [CurrentFileNumber, TotalFiles]);
+   fmProgress.ProgressTotal.Position := Round(CurrentFileNumber / TotalFiles * 100);
+
+end;
+
+procedure TCopyThread.OnTerminate(Sender: TObject);
+begin
+   //FreeAndNil(Self);
+end;
+
+procedure TCopyThread.PrepareDstFileList(SrcList, DstList: TStringList);
+var
+   i: Integer;
+   FileName: string;
+begin
+   for i := 0 to SrcList.Count - 1 do
+   begin
+      FileName := StringReplace(SrcList[i], FSourcePath, FDestPath, [rfIgnoreCase]);
+      DstList.Add(FileName);
+   end;
+end;
+
+procedure TCopyThread.ProgressFinished;
+begin
+   // Предполагается, что в финале все файлы обработаны (удачно или нет)
+   fmProgress.LabelFilesCount.Caption := Format('Файл %d из %d', [TotalFiles, TotalFiles]);
+   fmProgress.ProgressTotal.Position := 100;
+   fmProgress.ProgressFile.Position  := 100;
+   fmProgress.Timer1.Enabled := false;
+   //fmProgress.Close;
+end;
+
+procedure TCopyThread.ProgressStarted;
+begin
+   StartTime := Now;
+   fmProgress.LabelFilesCount.Caption := Format('Файл %d из %d', [CurrentFileNumber, TotalFiles]);
+   fmProgress.ProgressTotal.Position := 0;
+   fmProgress.ProgressFile.Position  := 0;
+   fmProgress.Timer1.Enabled := true;
+end;
+
+function CopyFileProgress(TotalFileSize, TotalBytesTransferred, StreamSize, StreamBytesTransferred: LARGE_INTEGER;
+                          dwStreamNumber, dwCallbackReason, hSourceFile, hDestinationFile: DWORD; lpData: Pointer): DWORD; stdcall;
+begin
+   if CancelCopy = True then
+   begin
+      SendMessage(THandle(lpData), CEXM_CANCEL, 0, 0);
+      result := PROGRESS_CANCEL;
+      Exit;
+   end;
+
+   case dwCallbackReason of
+      CALLBACK_CHUNK_FINISHED:
+         begin
+            SendMessage(THandle(lpData), CEXM_CONTINUE, TotalBytesTransferred.LowPart, TotalBytesTransferred.HighPart);
+            result := PROGRESS_CONTINUE;
+
+            if TotalFileSize.QuadPart > 0 then
+               fmProgress.ProgressFile.Position := Round(TotalBytesTransferred.QuadPart / TotalFileSize.QuadPart * 100)
+            else
+               fmProgress.ProgressFile.Position := 10; // Для файлов нулевого размера, только обозначим начало копирования
+         end;
+      CALLBACK_STREAM_SWITCH:
+         begin
+            SendMessage(THandle(lpData), CEXM_MAXBYTES, TotalFileSize.LowPart, TotalFileSize.HighPart);
+            result := PROGRESS_CONTINUE;
+         end;
+   else
+      result := PROGRESS_CONTINUE;
+   end;
+end;
+
+end.

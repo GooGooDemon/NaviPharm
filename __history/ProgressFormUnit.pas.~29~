@@ -1,0 +1,86 @@
+unit ProgressFormUnit;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, System.UITypes,
+
+  CopyThreadUnit, Vcl.ExtCtrls;
+
+type
+  TfmProgress = class(TForm)
+    ProgressFile: TProgressBar;
+    ProgressTotal: TProgressBar;
+    LabelFilesCount: TLabel;
+    LabelFileName: TLabel;
+    btnPause: TButton;
+    Button2: TButton;
+    Label3: TLabel;
+    LabelFileSize: TLabel;
+    LabelTiime: TLabel;
+    Timer1: TTimer;
+    procedure Button2Click(Sender: TObject);
+    procedure btnPauseClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+  private
+    { Private declarations }
+    CopyThread: TCopyThread;
+  public
+    { Public declarations }
+    procedure ShowProgress(const SrcPath, DstPath: string);
+  end;
+
+var
+  fmProgress: TfmProgress;
+
+implementation
+
+{$R *.dfm}
+
+{ TfmProgress }
+
+procedure TfmProgress.btnPauseClick(Sender: TObject);
+begin
+   if Assigned(CopyThread) and (not CopyThread.Finished) and (not CopyThread.Suspended) then
+   begin
+      CopyThread.Suspended := True;
+      btnPause.Caption := 'Продолжить';
+      Exit;
+   end;
+   if Assigned(CopyThread) and (not CopyThread.Finished) and (CopyThread.Suspended) then
+   begin
+      CopyThread.Suspended := False;
+      btnPause.Caption := 'Пауза';
+   end;
+end;
+
+procedure TfmProgress.Button2Click(Sender: TObject);
+begin
+   if MessageDlg('Остановить процесс копирования?', mtConfirmation, [mbYes,mbNo], 0, mbNo) = mrYes then
+   begin
+      CancelCopy := True;
+      CopyThread.Terminate;
+      Close;
+   end;
+end;
+
+procedure TfmProgress.FormCreate(Sender: TObject);
+begin
+   CopyThread := nil;
+end;
+
+procedure TfmProgress.ShowProgress(const SrcPath, DstPath: string);
+begin
+   CopyThread := TCopyThread.Create(Self, SrcPath, DstPath);
+   CopyThread.Start;
+   ShowModal;
+end;
+
+procedure TfmProgress.Timer1Timer(Sender: TObject);
+begin
+   fmProgress.LabelTiime.Caption := 'Продолжительность операции: ' + TimeToStr(Now-StartTime);
+end;
+
+end.

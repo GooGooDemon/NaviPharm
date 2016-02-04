@@ -1,0 +1,234 @@
+object fmMain: TfmMain
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
+  Caption = #1058#1077#1089#1090#1086#1074#1086#1077' '#1079#1072#1076#1072#1085#1080#1077' '#1076#1083#1103' '#1053#1072#1074#1080#1060#1072#1088#1084
+  ClientHeight = 591
+  ClientWidth = 801
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 572
+    Width = 801
+    Height = 19
+    Panels = <>
+    ExplicitWidth = 777
+  end
+  object GroupBox1: TGroupBox
+    Left = 16
+    Top = 8
+    Width = 769
+    Height = 145
+    Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1085#1080#1077' '#1092#1072#1081#1083#1086#1074
+    TabOrder = 1
+    object Label1: TLabel
+      Left = 16
+      Top = 87
+      Width = 85
+      Height = 13
+      Caption = #1048#1089#1093#1086#1076#1085#1072#1103' '#1087#1072#1087#1082#1072':'
+      Visible = False
+    end
+    object SourceLabel: TLabel
+      Left = 107
+      Top = 87
+      Width = 69
+      Height = 13
+      Caption = '<SRC Folder>'
+      Visible = False
+    end
+    object Label3: TLabel
+      Left = 16
+      Top = 114
+      Width = 86
+      Height = 13
+      Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1087#1072#1087#1082#1072':'
+      Visible = False
+    end
+    object DestLabel: TLabel
+      Left = 107
+      Top = 114
+      Width = 68
+      Height = 13
+      Caption = '<DST Folder>'
+      Visible = False
+    end
+    object Button1: TButton
+      Left = 16
+      Top = 23
+      Width = 201
+      Height = 49
+      Caption = #1054#1090#1082#1091#1076#1072'...'
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+    object Button2: TButton
+      Left = 223
+      Top = 23
+      Width = 201
+      Height = 49
+      Caption = #1050#1091#1076#1072'...'
+      TabOrder = 1
+      OnClick = Button2Click
+    end
+    object Button3: TButton
+      Left = 559
+      Top = 23
+      Width = 201
+      Height = 49
+      Caption = #1053#1072#1095#1072#1090#1100'!'
+      TabOrder = 2
+      OnClick = Button3Click
+    end
+  end
+  object DBGrid1: TDBGrid
+    Left = 16
+    Top = 167
+    Width = 769
+    Height = 386
+    DataSource = DataSource1
+    TabOrder = 2
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    Columns = <
+      item
+        Expanded = False
+        FieldName = #8470
+        Width = 40
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = #1060#1072#1081#1083
+        Width = 400
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = #1056#1072#1079#1084#1077#1088
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = #1053#1072#1095#1072#1083#1086
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = #1050#1086#1085#1077#1094
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100
+        Width = 110
+        Visible = True
+      end>
+  end
+  object IBTable1: TIBTable
+    Database = IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    FieldDefs = <
+      item
+        Name = 'ID'
+        Attributes = [faRequired]
+        DataType = ftInteger
+      end
+      item
+        Name = 'FNAME'
+        Attributes = [faRequired, faFixed]
+        DataType = ftWideString
+        Size = 1024
+      end
+      item
+        Name = 'FSIZE'
+        Attributes = [faRequired]
+        DataType = ftLargeint
+      end
+      item
+        Name = 'TIMESTART'
+        Attributes = [faRequired]
+        DataType = ftDateTime
+      end
+      item
+        Name = 'TIMEEND'
+        Attributes = [faRequired]
+        DataType = ftDateTime
+      end
+      item
+        Name = 'TIMEDURATION'
+        Attributes = [faReadonly]
+        DataType = ftFloat
+      end>
+    StoreDefs = True
+    TableName = 'TABLE_FILES'
+    UniDirectional = False
+    Left = 192
+    Top = 216
+    object IBTable1ID: TIntegerField
+      FieldName = 'ID'
+      Required = True
+    end
+    object IBTable1FNAME: TIBStringField
+      FieldName = 'FNAME'
+      Required = True
+      Size = 1024
+    end
+    object IBTable1FSIZE: TLargeintField
+      FieldName = 'FSIZE'
+      Required = True
+    end
+    object IBTable1TIMESTART: TDateTimeField
+      FieldName = 'TIMESTART'
+      Required = True
+    end
+    object IBTable1TIMEEND: TDateTimeField
+      FieldName = 'TIMEEND'
+      Required = True
+    end
+    object IBTable1TIMEDURATION: TFloatField
+      FieldKind = fkInternalCalc
+      FieldName = 'TIMEDURATION'
+      ReadOnly = True
+    end
+  end
+  object IBDatabase1: TIBDatabase
+    Connected = True
+    DatabaseName = 
+      'D:\Work Files\Projects\DelphiRAD\NaviPharm '#1050#1086#1087#1080#1088#1086#1074#1072#1085#1080#1077' '#1092#1072#1081#1083#1086#1074'\DA' +
+      'TABASE.FDB'
+    Params.Strings = (
+      'user_name=SYSDBA'
+      'password=masterkey')
+    LoginPrompt = False
+    ServerType = 'IBServer'
+    Left = 120
+    Top = 216
+  end
+  object IBTransaction1: TIBTransaction
+    DefaultDatabase = IBDatabase1
+    Left = 120
+    Top = 280
+  end
+  object DataSource1: TDataSource
+    DataSet = IBTable1
+    Left = 192
+    Top = 280
+  end
+end

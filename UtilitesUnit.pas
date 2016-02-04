@@ -1,0 +1,641 @@
+unit UtilitesUnit;
+
+interface
+
+uses Winapi.Windows, Winapi.Psapi, Winapi.TlHelp32, System.Classes, System.SysUtils,
+     System.RegularExpressionsCore, Vcl.Graphics, Vcl.Imaging.GIFImg, ShellAPI, ShlObj,
+     ActiveX,Vcl.Forms;
+
+function  IsProcessExists(const sName: string): boolean;
+procedure GetProcessList(List: TStringList);
+procedure ChangeProcessPriority(const hProcessID, dwPriority: DWORD);
+function  GetProcessId(const FileName: string): HWND;
+function  SearchStrInStrings(const S: string; Strings: TStrings): Integer;
+function  FileNameMatch(const FileName, RegExpMask: string): Boolean;
+function  TrimZero(const Value: string): string;
+function  GetParametrValue(const ParamsStr, ParamName: string): string;
+procedure FlipBitmapHorizontal(Source, Target: TBitmap);
+procedure FlipBitmapVertikal(Source, Target: TBitmap);
+procedure FlipBitmap(Bitmap: TBitmap; FlipHor: Boolean);
+procedure SaveBitmapToGif(Bmp: TBitmap; FileName: string; Optimize: Boolean = false);
+function  GetNameOfComputer: string;
+
+function GetSystemImagesListHandle: THandle;
+function GetNormalSystemIcon(Path: string): Integer;
+function GetSelectedSystemIcon(Path: string): Integer;
+function GetSysIconIndex(const FileName: string): Integer;
+function GetSysIconIndexByName(const FileName: string): Integer;
+
+procedure EnumFilesInFolder(const Path: string; List: TStringList; const SubFolders: Boolean);
+function IsEmptyFolder(Path: string): Boolean;
+function FolderDialogExecute(WndOwner: THandle; Flags: UINT): string;
+
+function GetApplicationBuildTime: TDateTime;
+function ShellExecuteMy(const FileName: string; const Params: String = ''; const ShowCmd: Integer = SW_NORMAL): Boolean;
+function ShellExecuteAndWait(const FileName, WorkDir, Params: String; const ShowCmd: Integer): Boolean;
+
+function FormatFileSize(Size: Int64): string;
+
+implementation
+
+function IsProcessExists(const sName: string): boolean;
+var
+   han: THandle;
+   ProcStruct : PROCESSENTRY32; // from "tlhelp32" in uses clause
+   FileName: string;
+begin
+   Result := false;
+   // Get a snapshot of the system
+   han := CreateToolhelp32Snapshot( TH32CS_SNAPALL, 0 );
+   if han = 0 then
+      exit;
+   // Loop thru the processes until we find it or hit the end
+   ProcStruct.dwSize := sizeof( PROCESSENTRY32 );
+   if Process32First( han, ProcStruct ) then
+   begin
+        repeat
+           FileName := ProcStruct.szExeFile;
+           // Check only against the portion of the name supplied, ignoring case
+           if UpperCase( FileName ) = UpperCase( sName ) then
+           begin
+              // Report we found it
+              Result := true;
+              Break;
+           end;
+        until not Process32Next(han, ProcStruct);
+   end;
+   // clean-up
+   CloseHandle( han );
+end;
+
+procedure GetProcessList(List: TStringList);
+var
+    PIDArray: array [0..1023] of DWORD;
+    cb: DWORD;
+    I: Integer;
+    ProcCount: Integer;
+    hMod: HMODULE;
+    hProcess: THandle;
+    ModuleName: array [0..300] of Char;
+begin
+    if List = nil then Exit;
+
+    EnumProcesses(@PIDArray, SizeOf(PIDArray), cb);
+    ProcCount := cb div SizeOf(DWORD);
+
+    for I := 0 to ProcCount - 1 do
+    begin
+        hProcess := OpenProcess(PROCESS_QUERY_INFORMATION or PROCESS_VM_READ, False, PIDArray[I]);
+        if (hProcess <> 0) then
+        begin
+           EnumProcessModules(hProcess, @hMod, SizeOf(hMod), cb);
+           GetModuleFilenameEx(hProcess, hMod, ModuleName, SizeOf(ModuleName));
+           List.Add(ModuleName);
+           CloseHandle(hProcess);
+        end;
+    end;
+end;
+
+procedure ChangeProcessPriority(const hProcessID, dwPriority: DWORD);
+var
+   ProcessHandle: THandle;
+   ThreadHandle: THandle;
+begin
+   ProcessHandle := OpenProcess(PROCESS_SET_INFORMATION, false, hProcessID);
+   SetPriorityClass(ProcessHandle, dwPriority);
+   //GetThreadContext()
+   ThreadHandle := GetCurrentThread;
+   SetThreadPriority(ThreadHandle, THREAD_PRIORITY_TIME_CRITICAL);
+end;
+
+function GetProcessId(const FileName: string): HWND;
+var
+    PIDArray: array [0..1023] of DWORD;
+    cb: DWORD;
+    I: Integer;
+    ProcCount: Integer;
+    hMod: HMODULE;
+    hProcess: THandle;
+    ModuleName: array [0..300] of Char;
+begin
+    EnumProcesses(@PIDArray, SizeOf(PIDArray), cb);
+    ProcCount := cb div SizeOf(DWORD);
+    Result := 0;
+
+    for I := 0 to ProcCount - 1 do
+    begin
+        hProcess := OpenProcess(PROCESS_QUERY_INFORMATION or PROCESS_VM_READ, False, PIDArray[I]);
+        if (hProcess <> 0) then
+        begin
+           EnumProcessModules(hProcess, @hMod, SizeOf(hMod), cb);
+           GetModuleFilenameEx(hProcess, hMod, ModuleName, SizeOf(ModuleName));
+           if UpperCase(FileName) = UpperCase(ModuleName) then
+           begin
+               Result := PIDArray[I];
+               CloseHandle(hProcess);
+               Exit;
+           end;
+           CloseHandle(hProcess);
+        end;
+    end;
+end;
+
+function SearchStrInStrings(const S: string; Strings: TStrings): Integer;
+var
+   i: Integer;
+begin
+   for i := 0 to Strings.Count - 1 do
+   begin
+      if Pos(S, Strings[i]) > 0 then
+      begin
+         Result := i;
+         Exit;
+      end;
+   end;
+   Result := -1;
+end;
+
+function FileNameMatch(const FileName, RegExpMask: string): Boolean;
+var
+   RegExp: TPerlRegEx;
+begin
+   RegExp := TPerlRegEx.Create;
+   try
+      // "C:\Program Files (x86)\Alpari NZ MT4 1\history\Alpari-Standard3\AUDJPY1.hst"
+      RegExp.Subject := UTF8String(ExtractFileName(FileName));
+      RegExp.RegEx := UTF8String(RegExpMask); // '\b[A-Z_#]+\d+.hst'
+      Result := RegExp.Match;
+   finally
+      RegExp.Free;
+   end;
+end;
+
+function  TrimZero(const Value: string): string;
+var
+   ValueFloat: Extended;
+begin
+   if Pos('.', Value) = 0 then
+   begin
+      Result := Value;
+      Exit;
+   end;
+
+   try
+      ValueFloat := StrToFloat(Value);
+
+      if ValueFloat = 0 then
+      begin
+         Result := '0';
+         Exit;
+      end
+      else if ValueFloat = 1 then
+      begin
+         Result := '1';
+         Exit;
+      end
+      else if ValueFloat = -1 then
+      begin
+         Result := '-1';
+         Exit;
+      end
+      else
+      begin
+         Result := Value;
+
+         while Result[Result.Length] = '0' do
+         begin
+            Delete(Result, Result.Length, 1);
+         end;
+
+         if Result[Result.Length] = '.' then
+         begin
+            Delete(Result, Result.Length, 1);
+         end;
+      end;
+   except
+      Result := Value;
+   end;
+end;
+
+function GetParametrValue(const ParamsStr, ParamName: string): string;
+var
+   Strings: TStringList;
+begin
+   Strings := TStringList.Create;
+   try
+      Strings.Text := StringReplace(ParamsStr, '; ', #13#10, [rfReplaceAll]);
+      Result := Strings.Values[ParamName];
+   finally
+      Strings.Free;
+   end;
+end;
+
+procedure FlipBitmapHorizontal(Source, Target: TBitmap);
+begin
+   Target.Assign(nil);
+   Target.Width := Source.Width;
+   Target.Height := Source.Height;
+   //Target.Canvas.CopyRect(
+   StretchBlt(Target.Canvas.Handle, 0, 0, Target.Width, Target.Height,
+              Source.Canvas.Handle, 0, Source.Height, Source.Width, Source.Height, SRCCOPY);
+end;
+
+procedure FlipBitmapVertikal(Source, Target: TBitmap);
+begin
+   Target.Assign(nil);
+   Target.Width := Source.Width;
+   Target.Height := Source.Height;
+   StretchBlt(Target.Canvas.Handle, 0, 0, Target.Width, Target.Height,
+              Source.Canvas.Handle, Source.Width, 0, Source.Width, Source.Height, SRCCOPY);
+end;
+
+procedure FlipBitmap(Bitmap: TBitmap; FlipHor: Boolean);
+{Зеркальное отражение изображения.
+ Если FlipHor = True, то отражение по горизонтали,
+ иначе по вертикали.}
+var
+  x, y, W, H: Integer;
+  Pixel_1, Pixel_2: PRGBTriple;
+  MemPixel: TRGBTriple;
+begin
+  Bitmap.PixelFormat := pf24Bit;
+  W := Bitmap.Width - 1;
+  H := Bitmap.Height - 1;
+  if FlipHor then {отражение по горизонтали}
+    for y := 0 to H do
+    begin
+      {помещаем оба указателя на строку H:}
+      Pixel_1 := Bitmap.ScanLine[y];
+      Pixel_2 := Bitmap.ScanLine[y];
+      {помещаем второй указатель в конец строки:}
+      Inc(Pixel_2, W);
+      {цикл идёт только до середины строки:}
+      for x := 0 to W div 2 do
+      begin
+        {симметричные точки обмениваются цветами:}
+        MemPixel := Pixel_1^;
+        Pixel_1^ := Pixel_2^;
+        Pixel_2^ := MemPixel;
+        Inc(Pixel_1); {смещаем указатель вправо}
+        Dec(Pixel_2); {смещаем указатель влево}
+      end;
+    end
+  else {отражение по вертикали}
+    {цикл идёт только до средней строки:}
+    for y := 0 to H div 2 do
+    begin
+      {помещаем первый указатель на строку H,
+       а второй на строку симметричную H:}
+      Pixel_1 := Bitmap.ScanLine[y];
+      Pixel_2 := Bitmap.ScanLine[H - y];
+      for x := 0 to W do
+      begin
+        {симметричные точки обмениваются цветами:}
+        MemPixel := Pixel_1^;
+        Pixel_1^ := Pixel_2^;
+        Pixel_2^ := MemPixel;
+        Inc(Pixel_1); {смещаем указатель вправо}
+        Inc(Pixel_2); {смещаем указатель вправо}
+      end;
+    end;
+end;
+
+procedure SaveBitmapToGif(Bmp: TBitmap; FileName: string; Optimize: Boolean = false);
+var
+  Gif: TGIFImage;
+begin
+  //Создаем объект TGIFImage
+  Gif := TGIFImage.Create;
+  //Передаем туда картинку из Bitmap'а
+  Gif.Assign(Bmp);
+  //Удаляем лишние цвета из палитры
+  if Optimize then
+     Gif.OptimizeColorMap;
+  //* Ура! *//
+  //Сохраняем картинку в gif формате
+  Gif.SaveToFile(FileName);
+  Gif.Free;
+end;
+
+function GetNameOfComputer: string;
+var
+   Buffer: array [0..MAX_COMPUTERNAME_LENGTH] of WideChar;
+   SizeOfBuf: DWORD;
+begin
+   SizeOfBuf :=  SizeOf(Buffer);
+   GetComputerName(Buffer, SizeOfBuf);
+   Result := Buffer;
+end;
+
+function GetSystemImagesListHandle: THandle;
+var
+   SHFileInfo: TSHFileInfo;
+   Buff: PChar;
+begin
+   Buff := StrAlloc(MAX_PATH);
+   try
+      GetWindowsDirectory(Buff, MAX_PATH);
+      Result := SHGetFileInfo(Buff, 0, SHFileInfo, SizeOf(SHFileInfo), SHGFI_SYSICONINDEX or SHGFI_SMALLICON);
+   finally
+      StrDispose(Buff);
+   end;
+end;
+
+function GetNormalSystemIcon(Path: string): Integer;
+var
+   sfi: TShFileInfo;
+begin
+   SHGetFileInfo( Pchar( Path ), 0, sfi, SizeOf( TSHFileInfo ), SHGFI_SYSICONINDEX or SHGFI_LARGEICON );
+   Result := sfi.iIcon;
+end;
+
+function GetSelectedSystemIcon(Path: string): Integer;
+var
+   sfi : TShFileInfo;
+begin
+   SHGetFileInfo( Pchar( Path ), 0, sfi, sizeOf( TSHFileInfo ), SHGFI_SYSICONINDEX or SHGFI_LARGEICON or SHGFI_OPENICON );
+   Result := sfi.iIcon;
+end;
+
+function GetSysIconIndex(const FileName: string): Integer;
+var
+  SHFileInfo: TSHFileInfo;
+  Success: DWORD;
+begin
+   Success := SHGetFileInfo(PChar(FileName), 0, SHFileInfo, SizeOf(SHFileInfo), SHGFI_SYSICONINDEX or SHGFI_SMALLICON);
+   if not LongBool(Success) then
+      SHGetFileInfo(nil, 0, SHFileInfo, SizeOf(SHFileInfo), SHGFI_SYSICONINDEX or SHGFI_SMALLICON);
+   Result := SHFileInfo.iIcon;
+end;
+
+function GetSysIconIndexByName(const FileName: string): Integer;
+var
+  SHFileInfo: TSHFileInfo;
+begin
+  SHGetFileInfo(PChar(FileName), 0, SHFileInfo, SizeOf(SHFileInfo),
+    SHGFI_SYSICONINDEX or SHGFI_SMALLICON or SHGFI_USEFILEATTRIBUTES);
+  Result := SHFileInfo.iIcon;
+end;
+
+function IsEmptyFolder(Path: string): Boolean;
+var
+  SearchRec: TSearchRec;
+begin
+  Result := False;
+  Path := IncludeTrailingPathDelimiter(Path);
+  if FindFirst(Path + '*', faAnyFile, SearchRec) = 0 then
+  begin
+    repeat
+      if (SearchRec.Attr and faDirectory) = faDirectory then
+      begin
+        if SearchRec.Name[1] <> '.' then
+          Exit;
+      end
+      else
+        Exit;
+    until FindNext(SearchRec) <> 0;
+    FindClose(SearchRec);
+  end;
+  Result := True;
+end;
+
+procedure EnumFilesInFolder(const Path: string; List: TStringList; const SubFolders: Boolean);
+var
+   SearchRec: TSearchRec;
+begin
+   if FindFirst(IncludeTrailingPathDelimiter(Path) + '*', faAnyFile, SearchRec) <> 0 then Exit;
+
+   repeat
+      if (SearchRec.Attr and faDirectory) = faDirectory then
+      begin
+         if SubFolders and (SearchRec.Name[1] <> '.')  then
+            EnumFilesInFolder(IncludeTrailingPathDelimiter(Path + SearchRec.Name), List, SubFolders);
+      end
+      else
+      begin
+         List.Add(Path + SearchRec.Name);
+      end;
+      //Application.ProcessMessages;
+   until (FindNext(SearchRec) <> 0);
+   FindClose(SearchRec);
+end;
+
+function FolderDialogExecute(WndOwner: THandle; Flags: UINT): string;
+var
+   BrowseInfo: TBrowseInfo;
+   RootItemIDList, ItemIDList: PItemIDList;
+   lpFolderName: PChar;
+   ShellMalloc: IMalloc;
+begin
+   FillChar(BrowseInfo, SizeOf(BrowseInfo), 0);
+   if (ShGetMalloc(ShellMalloc) = S_OK) and (ShellMalloc <> nil) then
+   begin
+      lpFolderName := ShellMalloc.Alloc(MAX_PATH);
+      try
+         RootItemIDList := nil;
+         with BrowseInfo do
+         begin
+           hwndOwner := WndOwner;
+           pidlRoot := RootItemIDList;
+           pszDisplayName := lpFolderName;
+           lpszTitle := nil;
+           ulFlags := Flags;
+           lpfn := nil;
+           lParam := 0;
+         end;
+
+         ItemIDList := SHBrowseForFolder(BrowseInfo);
+         if ItemIDList <> nil then
+         begin
+           ShGetPathFromIDList(ItemIDList, lpFolderName);
+           ShellMalloc.Free(ItemIDList);
+
+           Result := lpFolderName;
+         end;
+    finally
+      ShellMalloc.Free(lpFolderName);
+    end;
+  end;
+end;
+
+function GetApplicationBuildTime: TDateTime;
+type
+ UShort = Word;
+ TImageDosHeader = packed record
+    e_magic: UShort;               //магическое число
+    e_cblp: UShort;                //количество байт на последней странице файла
+    e_cp: UShort;                  //количество страниц вфайле
+    e_crlc: UShort;                //Relocations
+    e_cparhdr: UShort;             //размер заголовка в параграфах
+    e_minalloc: UShort;            //Minimum extra paragraphsneeded
+    e_maxalloc: UShort;            //Maximum extra paragraphsneeded
+    e_ss: UShort;                  //начальное( относительное ) значение
+                                   // регистра SS
+    e_sp: UShort;                  //начальное значениерегистра SP
+    e_csum: UShort;                //контрольная сумма
+    e_ip: UShort;                  //начальное значение регистра IP
+    e_cs: UShort;                  //начальное( относительное ) значение
+                                   // регистра SS
+    e_lfarlc: UShort;              //адрес в файле на таблицу переадресации
+    e_ovno: UShort;                //количество оверлеев
+    e_res: array[0..3] of UShort;  //Зарезервировано
+    e_oemid: UShort;               //OEM identifier (for e_oeminfo)
+    e_oeminfo: UShort;             //OEM information; e_oemid specific
+    e_res2: array [0..9] of UShort;//Зарезервировано
+    e_lfanew: LongInt;             //адрес в файле нового .exeзаголовка
+  end;
+
+ TImageResourceDirectory = packed record
+    Characteristics: DWord;
+    TimeDateStamp: DWord;
+    MajorVersion: Word;
+    MinorVersion: Word;
+    NumberOfNamedEntries: Word;
+    NumberOfIdEntries: Word;
+//  IMAGE_RESOURCE_DIRECTORY_ENTRY DirectoryEntries[];
+  end;
+  PImageResourceDirectory = ^TImageResourceDirectory;
+
+var
+  hExeFile: HFile;
+  ImageDosHeader: TImageDosHeader;
+  Signature: Cardinal;
+  ImageFileHeader: TImageFileHeader;
+  ImageOptionalHeader: TImageOptionalHeader;
+  ImageSectionHeader: TImageSectionHeader;
+  ImageResourceDirectory: TImageResourceDirectory;
+  Temp: Cardinal;
+  i: Integer;
+begin
+  hExeFile := CreateFile(PChar(ParamStr(0)), GENERIC_READ, FILE_SHARE_READ,nil, OPEN_EXISTING, 0, 0);
+  try
+    ReadFile(hExeFile, ImageDosHeader, SizeOf(ImageDosHeader), Temp, nil);
+    SetFilePointer(hExeFile, ImageDosHeader.e_lfanew, nil, FILE_BEGIN);
+    ReadFile(hExeFile, Signature, SizeOf(Signature), Temp, nil);
+    ReadFile(hExeFile, ImageFileHeader, SizeOf(ImageFileHeader), Temp, nil);
+    ReadFile(hExeFile, ImageOptionalHeader, SizeOf(ImageOptionalHeader), Temp, nil);
+    for i:=0 to ImageFileHeader.NumberOfSections-1 do
+    begin
+      ReadFile(hExeFile, ImageSectionHeader, SizeOf(ImageSectionHeader), Temp, nil);
+      if (StrComp(@ImageSectionHeader.Name, '.rsrc') = 0) then
+        Break;
+    end;
+    SetFilePointer(hExeFile, ImageSectionHeader.PointerToRawData, nil, FILE_BEGIN);
+    ReadFile(hExeFile, ImageResourceDirectory, SizeOf(ImageResourceDirectory), Temp, nil);
+  finally
+    FileClose(hExeFile);
+  end;
+  if ImageResourceDirectory.TimeDateStamp > 0 then
+     Result:=FileDateToDateTime(ImageResourceDirectory.TimeDateStamp)
+   else Result := 0;
+end;
+
+function ShellExecuteAndWait(const FileName, WorkDir, Params: String; const ShowCmd: Integer): Boolean;
+var
+   ShellExecuteInfo: TShellExecuteInfo;
+   dwExitCode: DWORD;
+begin
+   FillChar(ShellExecuteInfo, SizeOf(ShellExecuteInfo), 0);
+   ShellExecuteInfo.cbSize       := SizeOf(ShellExecuteInfo);
+   ShellExecuteInfo.fMask        := SEE_MASK_NOCLOSEPROCESS;
+   ShellExecuteInfo.Wnd          := HWND_DESKTOP;
+   ShellExecuteInfo.lpVerb       := 'open';
+   ShellExecuteInfo.lpFile       := PChar(FileName);
+   ShellExecuteInfo.lpParameters := PChar(Params);
+   ShellExecuteInfo.lpDirectory  := PChar(WorkDir);
+   ShellExecuteInfo.nShow        := ShowCmd;
+   ShellExecuteInfo.hInstApp     := 0;
+   ShellExecuteInfo.lpIDList     := nil;
+   ShellExecuteInfo.lpClass      := nil;
+   ShellExecuteInfo.hkeyClass    := 0;
+   ShellExecuteInfo.dwHotKey     := 0;
+   ShellExecuteInfo.hIcon        := 0;
+   ShellExecuteInfo.hProcess     := 0;
+
+	Result := ShellExecuteEx(@ShellExecuteInfo);
+
+   if Result then
+   begin
+      repeat
+         GetExitCodeProcess(ShellExecuteInfo.hProcess, dwExitCode);
+         Application.ProcessMessages;
+         Sleep(500);
+         if Application.Terminated then Exit;
+      until (dwExitCode <> STILL_ACTIVE);
+   end;
+   //MessageBox(0, PChar('Процесс завершил работу: ' + Filename), '', MB_ICONINFORMATION);
+end;
+
+function ShellExecuteMy(const FileName: string; const Params: String = ''; const ShowCmd: Integer = SW_NORMAL): Boolean;
+var
+   ShellExecuteInfo: TShellExecuteInfo;
+begin
+   FillChar(ShellExecuteInfo, SizeOf(ShellExecuteInfo), 0);
+   ShellExecuteInfo.cbSize       := SizeOf(ShellExecuteInfo);
+   ShellExecuteInfo.fMask        := SEE_MASK_NOCLOSEPROCESS;
+   ShellExecuteInfo.Wnd          := HWND_DESKTOP;
+   ShellExecuteInfo.lpVerb       := 'open';
+   ShellExecuteInfo.lpFile       := PChar(FileName);
+   ShellExecuteInfo.lpParameters := PChar(Params);
+   ShellExecuteInfo.lpDirectory  := nil;
+   ShellExecuteInfo.nShow        := ShowCmd;
+   ShellExecuteInfo.hInstApp     := 0;
+   ShellExecuteInfo.lpIDList     := nil;
+   ShellExecuteInfo.lpClass      := nil;
+   ShellExecuteInfo.hkeyClass    := 0;
+   ShellExecuteInfo.dwHotKey     := 0;
+   ShellExecuteInfo.hIcon        := 0;
+   ShellExecuteInfo.hProcess     := 0;
+
+	Result := ShellExecuteEx(@ShellExecuteInfo);
+   if Result then
+   begin
+
+   end;
+end;
+
+function FormatFileSize(Size: Int64): string;
+begin
+   if Size = 0 then
+   begin
+      Result := '0 Б';
+   end
+   else if Size < 1000 then
+   begin
+      Result := FormatFloat('0', Size) + ' Б';
+   end
+   else
+   begin
+      Size := Size div 1024;
+      if (Size < 1000) then
+      begin
+         Result := FormatFloat('0.0', Size) + ' КБ';
+      end
+      else
+      begin
+         Size := Size div 1024;
+         if (Size < 1000) then
+         begin
+            Result := FormatFloat('0.00', Size) + ' МБ';
+         end
+         else
+         begin
+            Size := Size div 1024;
+            if (Size < 1000) then
+            begin
+               Result := FormatFloat('0.00', Size) + ' ГБ';
+           end
+           else
+           begin
+               Size := Size div 1024;
+               if (Size < 1024) then
+               begin
+                  Result := FormatFloat('0.00', Size) + ' ТБ';
+               end;
+           end;
+         end;
+      end;
+   end;
+end;
+
+end.
